@@ -1,4 +1,5 @@
 import 'package:chewie/chewie.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
@@ -76,8 +77,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     //   count = widget.tutorialModel.rounds;
     // });
     _controller.addListener(() {
-      countRoundIncrement();
       if (_controller.value.position.inSeconds.toString() != time) {
+        countRoundIncrement();
         setState(() {
           time = _controller.value.position.inSeconds.toString();
         });
@@ -103,17 +104,13 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            time,
-            style: TextStyle(color: Colors.black),
-          ),
           Container(
               color: Colors.black,
               height: 300,
               width: width,
               child: Chewie(controller: _chewieController)),
           Text(
-            duration.toString(),
+            time.toString(),
             style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           Expanded(
