@@ -22,6 +22,7 @@ class _BuildVideoListState extends State<BuildVideoList> {
   late VideoPlayerController _controller;
   int rounds = 1;
   int currentIndex = 0;
+  bool nextvideo = false;
   int _duration = 0;
   late Timer _timer;
   Timer? _restTimer;
@@ -42,6 +43,11 @@ class _BuildVideoListState extends State<BuildVideoList> {
         });
         if (rounds > 0) {
           _startRest();
+        } else {
+          setState(() {
+            nextvideo = true;
+          });
+          _startRest();
         }
       }
     });
@@ -60,6 +66,11 @@ class _BuildVideoListState extends State<BuildVideoList> {
         print('rest time ended!');
         if (rounds > 0) {
           _playVideo(index: currentIndex);
+        } else {
+          _playVideo(index: currentIndex + 1);
+          setState(() {
+            nextvideo = false;
+          });
         }
       }
     });
@@ -108,114 +119,138 @@ class _BuildVideoListState extends State<BuildVideoList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _restTimer?.isActive ?? false
-            ? Container(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
-                height: 250,
-                color: Colors.black,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Rest Time',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      restTime.toString(),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ))
-            : Container(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
-                color: Colors.black,
-                height: 250,
-                child: _controller.value.isInitialized
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 200,
-                            child: GestureDetector(
-                              onTap: (() {
-                                if (_controller.value.isPlaying) {
-                                  _controller.pause();
-                                  _timer.cancel();
-                                } else {
-                                  _controller.play();
-                                  _startTimer();
-                                }
-                              }),
-                              child: Stack(children: [
-                                VideoPlayer(_controller),
-                                _controller.value.isPlaying
-                                    ? SizedBox()
-                                    : Center(
-                                        child: Icon(
-                                          Icons.play_arrow,
-                                          color: Colors.white,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Exercise Type'),
+      ),
+      body: Column(
+        children: [
+          _restTimer?.isActive ?? false
+              ? Container(
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                  height: 250,
+                  color: Colors.black,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        nextvideo ? 'Next Video' : 'Take Rest',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        restTime.toString(),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ))
+              : Container(
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                  color: Colors.black,
+                  height: 250,
+                  child: _controller.value.isInitialized
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 200,
+                              child: GestureDetector(
+                                onTap: (() {
+                                  // if (rounds > 0) {
+                                  if (_controller.value.isPlaying) {
+                                    _controller.pause();
+                                    _timer.cancel();
+                                  } else {
+                                    _controller.play();
+                                    _startTimer();
+                                  }
+                                  // }
+                                  // else {
+                                  //   _playVideo(index: currentIndex, init: true);
+                                  // }
+                                }),
+                                child: Stack(children: [
+                                  VideoPlayer(_controller),
+                                  _controller.value.isPlaying
+                                      ? SizedBox()
+                                      : Center(
+                                          child: rounds > 0
+                                              ? Icon(
+                                                  Icons.play_arrow,
+                                                  color: Colors.white,
+                                                  size: 25,
+                                                )
+                                              : Icon(
+                                                  Icons.replay_outlined,
+                                                  color: Colors.white,
+                                                  size: 25,
+                                                ),
                                         ),
-                                      ),
-                              ]),
+                                ]),
+                              ),
                             ),
-                          ),
-                          VideoProgressIndicator(_controller,
-                              allowScrubbing: false),
-                        ],
-                      )
-                    : Center(child: CircularProgressIndicator()),
-              ),
-        Expanded(
-          child: ListView.separated(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              separatorBuilder: ((context, index) => SizedBox(
-                    height: 30.0,
-                  )),
-              itemCount: widget.model.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Container(
-                      color: widget.isplaying && widget.playingIndex == index
-                          ? Colors.black26
-                          : null,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: 100,
-                            width: 100,
-                            child: Image.network(
-                              widget.model[index].thumbnail,
-                              fit: BoxFit.cover,
+                            VideoProgressIndicator(_controller,
+                                allowScrubbing: false),
+                          ],
+                        )
+                      : Center(child: CircularProgressIndicator()),
+                ),
+          Expanded(
+            child: ListView.separated(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                separatorBuilder: ((context, index) => SizedBox(
+                      height: 30.0,
+                    )),
+                itemCount: widget.model.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        color: widget.isplaying && widget.playingIndex == index
+                            ? Colors.black26
+                            : null,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              height: 100,
+                              width: 100,
+                              child: Image.network(
+                                widget.model[index].thumbnail,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          Text(widget.model[index].title),
-                          Text('Rounds : '),
-                          CircleAvatar(
-                            child: Text(widget.model[index].rounds.toString()),
-                          ),
-                        ],
+                            Text(widget.model[index].title),
+                            Text('Rounds : '),
+                            CircleAvatar(
+                              child:
+                                  Text(widget.model[index].rounds.toString()),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  onTap: () => _playVideo(index: index),
-                );
-              }),
-        ),
-      ],
+                    onTap: () {
+                      _playVideo(index: index);
+                      setState(() {
+                        nextvideo = false;
+                        _restTimer?.cancel();
+                      });
+                    },
+                  );
+                }),
+          ),
+        ],
+      ),
     );
   }
 }
