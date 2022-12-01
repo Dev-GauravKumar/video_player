@@ -7,6 +7,7 @@ class TutorialModel with _$TutorialModel {
   const factory TutorialModel({
     required String videoLink,
     required String title,
+    required String time,
     @Default(1) int rounds,
     required String thumbnail,
   }) = _TutorialModel;
