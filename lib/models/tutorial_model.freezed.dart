@@ -22,6 +22,7 @@ TutorialModel _$TutorialModelFromJson(Map<String, dynamic> json) {
 mixin _$TutorialModel {
   String get videoLink => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
+  String get time => throw _privateConstructorUsedError;
   int get rounds => throw _privateConstructorUsedError;
   String get thumbnail => throw _privateConstructorUsedError;
 
@@ -37,7 +38,12 @@ abstract class $TutorialModelCopyWith<$Res> {
           TutorialModel value, $Res Function(TutorialModel) then) =
       _$TutorialModelCopyWithImpl<$Res, TutorialModel>;
   @useResult
-  $Res call({String videoLink, String title, int rounds, String thumbnail});
+  $Res call(
+      {String videoLink,
+      String title,
+      String time,
+      int rounds,
+      String thumbnail});
 }
 
 /// @nodoc
@@ -55,6 +61,7 @@ class _$TutorialModelCopyWithImpl<$Res, $Val extends TutorialModel>
   $Res call({
     Object? videoLink = null,
     Object? title = null,
+    Object? time = null,
     Object? rounds = null,
     Object? thumbnail = null,
   }) {
@@ -66,6 +73,10 @@ class _$TutorialModelCopyWithImpl<$Res, $Val extends TutorialModel>
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      time: null == time
+          ? _value.time
+          : time // ignore: cast_nullable_to_non_nullable
               as String,
       rounds: null == rounds
           ? _value.rounds
@@ -87,7 +98,12 @@ abstract class _$$_TutorialModelCopyWith<$Res>
       __$$_TutorialModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String videoLink, String title, int rounds, String thumbnail});
+  $Res call(
+      {String videoLink,
+      String title,
+      String time,
+      int rounds,
+      String thumbnail});
 }
 
 /// @nodoc
@@ -103,6 +119,7 @@ class __$$_TutorialModelCopyWithImpl<$Res>
   $Res call({
     Object? videoLink = null,
     Object? title = null,
+    Object? time = null,
     Object? rounds = null,
     Object? thumbnail = null,
   }) {
@@ -114,6 +131,10 @@ class __$$_TutorialModelCopyWithImpl<$Res>
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      time: null == time
+          ? _value.time
+          : time // ignore: cast_nullable_to_non_nullable
               as String,
       rounds: null == rounds
           ? _value.rounds
@@ -133,6 +154,7 @@ class _$_TutorialModel implements _TutorialModel {
   const _$_TutorialModel(
       {required this.videoLink,
       required this.title,
+      required this.time,
       this.rounds = 1,
       required this.thumbnail});
 
@@ -144,6 +166,8 @@ class _$_TutorialModel implements _TutorialModel {
   @override
   final String title;
   @override
+  final String time;
+  @override
   @JsonKey()
   final int rounds;
   @override
@@ -151,7 +175,7 @@ class _$_TutorialModel implements _TutorialModel {
 
   @override
   String toString() {
-    return 'TutorialModel(videoLink: $videoLink, title: $title, rounds: $rounds, thumbnail: $thumbnail)';
+    return 'TutorialModel(videoLink: $videoLink, title: $title, time: $time, rounds: $rounds, thumbnail: $thumbnail)';
   }
 
   @override
@@ -162,6 +186,7 @@ class _$_TutorialModel implements _TutorialModel {
             (identical(other.videoLink, videoLink) ||
                 other.videoLink == videoLink) &&
             (identical(other.title, title) || other.title == title) &&
+            (identical(other.time, time) || other.time == time) &&
             (identical(other.rounds, rounds) || other.rounds == rounds) &&
             (identical(other.thumbnail, thumbnail) ||
                 other.thumbnail == thumbnail));
@@ -170,7 +195,7 @@ class _$_TutorialModel implements _TutorialModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, videoLink, title, rounds, thumbnail);
+      Object.hash(runtimeType, videoLink, title, time, rounds, thumbnail);
 
   @JsonKey(ignore: true)
   @override
@@ -190,6 +215,7 @@ abstract class _TutorialModel implements TutorialModel {
   const factory _TutorialModel(
       {required final String videoLink,
       required final String title,
+      required final String time,
       final int rounds,
       required final String thumbnail}) = _$_TutorialModel;
 
@@ -200,6 +226,8 @@ abstract class _TutorialModel implements TutorialModel {
   String get videoLink;
   @override
   String get title;
+  @override
+  String get time;
   @override
   int get rounds;
   @override
