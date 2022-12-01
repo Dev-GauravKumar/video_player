@@ -9,11 +9,11 @@ import 'package:video_tutorial/widgets/build_video_list.dart';
 // ignore: must_be_immutable
 class VideoPlayerWidget extends StatefulWidget {
   TutorialModel tutorialModel;
-  List<TutorialModel> modles;
+  List<TutorialModel> models;
   VideoPlayerWidget({
     super.key,
     required this.tutorialModel,
-    required this.modles,
+    required this.models,
   });
 
   @override
@@ -21,77 +21,23 @@ class VideoPlayerWidget extends StatefulWidget {
 }
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  int count = 0;
-  String time = '';
-  int duration = 0;
-  bool showMessage = false;
-
   late VideoPlayerController _controller;
-  late ChewieController _chewieController;
+  int currentIndex = 0;
 
-  // void countRound() {
-  //   if (_controller.value.position.inSeconds ==
-  //       _controller.value.duration.inSeconds) {
-  //     setState(() {
-  //       _controller.seekTo(const Duration(seconds: 0));
-  //     });
-  //     print("*************${_controller.value.position.inSeconds}");
-  //     print(count);
-  //     if (count <= 1) {
-  //       _chewieController.isPlaying ? _chewieController.pause() : null;
-  //       setState(() {
-  //         _controller.seekTo(const Duration(seconds: 0));
-  //       });
-  //       print('Video Ended');
-  //     } else {
-  //       count--;
-  //       return;
-  //     }
-  //   }
-  //   return;
-  // }
-  void countRoundIncrement() {
-    if (time == '0') {
-      count++;
-      print('***************$count');
-      if (count == widget.tutorialModel.rounds) {
-        _chewieController.setLooping(false);
-        _chewieController.pause();
-        print('+++++++++++++++++$count');
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    _controller = VideoPlayerController.network(widget.tutorialModel.videoLink);
-    _chewieController = ChewieController(
-        videoPlayerController: _controller,
-        autoInitialize: true,
-        looping: true,
-        autoPlay: true,
-        deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-        deviceOrientationsOnEnterFullScreen: [DeviceOrientation.landscapeLeft],
-        maxScale: 1);
-    // setState(() {
-    //   count = widget.tutorialModel.rounds;
-    // });
-    _controller.addListener(() {
-      if (_controller.value.position.inSeconds.toString() != time) {
-        countRoundIncrement();
-        setState(() {
-          time = _controller.value.position.inSeconds.toString();
-        });
-      }
-    });
-    super.initState();
+  void _playVideo({int index = 0, bool init = false}) {
+    if (index < 0 || index >= widget.models.length) return;
+    _controller =
+        VideoPlayerController.network(widget.models[currentIndex].videoLink)
+          ..addListener(() => setState(() {}))
+          ..setLooping(false)
+          ..initialize().then((value) {
+            _controller.play();
+          });
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _chewieController.dispose();
-    _controller.removeListener(() {});
     super.dispose();
   }
 
@@ -108,16 +54,12 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               color: Colors.black,
               height: 300,
               width: width,
-              child: Chewie(controller: _chewieController)),
-          Text(
-            time.toString(),
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
+              child: VideoPlayer(_controller)),
           Expanded(
               child: BuildVideoList(
-            model: widget.modles,
+            model: widget.models,
             isplaying: true,
-            playingIndex: widget.modles.indexOf(widget.tutorialModel),
+            playingIndex: widget.models.indexOf(widget.tutorialModel),
           )),
         ],
       ),

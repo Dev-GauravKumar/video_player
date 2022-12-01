@@ -17,7 +17,8 @@ class _HomePageState extends State<HomePage> {
   final List<TutorialModel> _model = const [
     TutorialModel(
         rounds: 2,
-        videoLink: 'https://www.pexels.com/video/4761426/download/',
+        videoLink:
+            'https://joy.videvo.net/videvo_files/video/free/2018-05/large_watermarked/180419_Boxing_15_06_preview.mp4',
         title: 'Tutorial Title',
         thumbnail:
             'https://images.unsplash.com/photo-1599058917212-d750089bc07e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80'),
