@@ -196,6 +196,10 @@ class _BuildVideoListState extends State<BuildVideoList> {
                                   ]),
                                 ),
                               ),
+                              VideoProgressIndicator(
+                                _controller,
+                                allowScrubbing: false,
+                              ),
                               // Row(
                               //   children: [
                               //     Expanded(
