@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_tutorial/models/tutorial_model.dart';
 
 class BuildVideoList extends StatefulWidget {
+  late File file;
   List<TutorialModel> model;
   bool isplaying;
   int playingIndex;
@@ -92,8 +94,9 @@ class _BuildVideoListState extends State<BuildVideoList> {
     setState(() {
       currentIndex = index;
     });
+
     _controller =
-        VideoPlayerController.network(widget.model[currentIndex].videoLink)
+        VideoPlayerController.file(File(widget.model[index].videoLink))
           ..addListener(() => setState(() {}))
           ..setLooping(false)
           ..initialize().then((value) {
@@ -108,6 +111,7 @@ class _BuildVideoListState extends State<BuildVideoList> {
   @override
   void initState() {
     _playVideo(init: true);
+    widget.file = File(widget.model[0].videoLink);
     super.initState();
   }
 
@@ -121,7 +125,7 @@ class _BuildVideoListState extends State<BuildVideoList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercise Type'),
+        title: Text(widget.file.existsSync().toString()),
       ),
       body: Column(
         children: [
@@ -199,15 +203,29 @@ class _BuildVideoListState extends State<BuildVideoList> {
                                 allowScrubbing: false),
                           ],
                         )
-                      : Center(child: CircularProgressIndicator()),
+                      : Center(
+                          child: Text(
+                          'Ready',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
+                        )),
                 ),
           Expanded(
             child: ListView.separated(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                separatorBuilder: ((context, index) => SizedBox(
-                      height: 30.0,
-                    )),
+                separatorBuilder: ((context, index) {
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Text(widget.model[0].videoLink)
+                    ],
+                  );
+                }),
                 itemCount: widget.model.length,
                 itemBuilder: (context, index) {
                   return InkWell(
